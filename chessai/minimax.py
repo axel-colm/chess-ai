@@ -32,26 +32,25 @@ def minimax(board: chess.Board, depth: int, maximizing_player: chess.Color) -> T
     if depth == 0 or board.is_game_over():
         return evaluate(board, maximizing_player), None
     
-    if board.turn == maximizing_player:
-        best_move = None
-        best_score = -float('inf')
-        for move in board.legal_moves:
-            board.push(move)
-            score, _ = minimax(board, depth - 1, maximizing_player)
-            board.pop()
+    best_move = None
+    best_score = -float('inf') if board.turn == maximizing_player else float('inf')
+    
+    for move in board.legal_moves:
+        # Make the move
+        board.push(move)
+        score, _ = minimax(board, depth - 1, maximizing_player)
+        board.pop()
+        
+        # Maximizing the score 
+        if board.turn == maximizing_player:
             if score > best_score:
                 best_score = score
                 best_move = move
-        return best_score, best_move
-    else:
-        best_move = None
-        best_score = float('inf')
-        for move in board.legal_moves:
-            board.push(move)
-            score, _ = minimax(board, depth - 1, maximizing_player)
-            board.pop()
+        # Minimizing the score
+        else:
             if score < best_score:
                 best_score = score
                 best_move = move
-        return best_score, best_move
+                
+    return best_score, best_move
 

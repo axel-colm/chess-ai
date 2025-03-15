@@ -2,7 +2,7 @@ import chess
 import chess.engine
 from chessai.utils import display_board
 from chessai.minimax import minimax
-from chessai.alphabeta import alphabeta
+from chessai.alphabeta import alphabeta, evaluate
 
 def player_move(board: chess.Board):
     """
@@ -38,9 +38,14 @@ def main(p1: str, p2: str, depth: int = 3):
     """
     board = chess.Board()
 
+    turn = 0
     while not board.is_game_over():
+        print(f"Turn {turn}: {'White' if board.turn == chess.WHITE else 'Black'} to move")
         display_board(board)
-
+        weval = evaluate(board, chess.WHITE)
+        beval = evaluate(board, chess.BLACK)
+        print(f"Material eval: White {weval:.2f}, Black {beval:.2f}")
+        
         if board.turn == chess.WHITE:
             if p1 == 'player':
                 move = player_move(board)
@@ -65,6 +70,7 @@ def main(p1: str, p2: str, depth: int = 3):
                 raise ValueError("Invalid player type for p2")
 
         board.push(move)
+        turn += 1
 
     print(board.unicode(empty_square="."))
     result = board.result()
